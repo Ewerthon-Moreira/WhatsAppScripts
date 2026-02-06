@@ -91,4 +91,4 @@ enviarScript(script, 1500)
         console.error("❌ Erro fatal:");
         console.error(err.message);
     });
-<-pre>
+</pre>
