@@ -10,7 +10,7 @@ async function enviarScript(scriptText, delay = 1000, repetitions = 1) {
     const main = document.querySelector("#main");
 
     for (let i = 0; i < repetitions; i++) {
-        console.log(`🎬 Shrek - Repetição ${i + 1} de ${repetitions}`);
+        console.log(`Repetição ${i + 1} de ${repetitions}`);
 
         for (const line of lines) {
             const textarea = buscarCaixaTexto();
