@@ -13,7 +13,7 @@ Esta é a versão definitiva e ultra-robusta. Ela não depende apenas de um sele
 
 Código base de exemplo (começa na linha 17, termina na linha 93):
 
-
+<pre>
 async function enviarScript(scriptText, delay = 1000) {
     const lines = scriptText.split('\n').map(line => line.trim()).filter(line => line);
 
@@ -91,3 +91,4 @@ enviarScript(script, 1500)
         console.error("❌ Erro fatal:");
         console.error(err.message);
     });
+<-pre>
