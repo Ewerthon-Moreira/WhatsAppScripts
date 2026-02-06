@@ -21,7 +21,7 @@ async function enviarScript(scriptText, delay = 1000, repetitions = 1) {
             textarea.focus();
             document.execCommand('insertText', false, line);
             
-            // CORREÇÃO: O evento 'input' é o que ativa o botão de enviar em 2026
+            // CORREÇÃO: O evento 'input' é que ativa o botão de enviar em 2026
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
 
             await new Promise(resolve => setTimeout(resolve, 300));
