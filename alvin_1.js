@@ -2,6 +2,7 @@ async function enviarScript(scriptText, delay = 1000) {
     const lines = scriptText.split('\n').map(line => line.trim()).filter(line => line);
 
     // Tenta encontrar a caixa de texto de várias formas (fallback)
+    // rapaz...
     function buscarCaixaTexto() {
         return document.querySelector('#main div[contenteditable="true"][data-tab="10"]') || 
                document.querySelector('#main div[contenteditable="true"]') ||
