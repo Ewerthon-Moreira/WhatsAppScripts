@@ -11,7 +11,7 @@ Esta é a versão definitiva e ultra-robusta. Ela não depende apenas de um sele
 6. Cole o script (Ctrl+V) + Enter
 7. Feche o console: (Ctrl+Shift+J)
 
-Código base de exemplo (começa na linha 17, termina na linha 93):
+Código base de exemplo:
 
 <pre>
 async function enviarScript(scriptText, delay = 1000) {
