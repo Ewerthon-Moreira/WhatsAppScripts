@@ -1,46 +1,58 @@
-async function enviarScript(scriptText, delay = 1000, repetitions = 1) {
+async function enviarScript(scriptText, delay = 1000) {
     const lines = scriptText.split('\n').map(line => line.trim()).filter(line => line);
 
+    // Tenta encontrar a caixa de texto de várias formas (fallback)
     function buscarCaixaTexto() {
         return document.querySelector('#main div[contenteditable="true"][data-tab="10"]') || 
                document.querySelector('#main div[contenteditable="true"]') ||
                document.querySelector('div[contenteditable="true"]');
     }
 
+    const textarea = buscarCaixaTexto();
+
+    if (!textarea) {
+        throw new Error("Não foi possível encontrar a caixa de texto. Certifique-se de que a conversa está aberta e visível.");
+    }
+
     const main = document.querySelector("#main");
 
-    for (let i = 0; i < repetitions; i++) {
-        console.log(`Repetição ${i + 1} de ${repetitions}`);
+    for (const line of lines) {
+        console.log(`Enviando: ${line}`);
+        
+        // Foca e limpa qualquer resquício
+        textarea.focus();
+        
+        // Insere o texto
+        document.execCommand('insertText', false, line);
+        
+        // Dispara múltiplos eventos para garantir que o WhatsApp note a digitação
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        
+        // Pequeno atraso para o botão de envio ser gerado na tela
+        await new Promise(resolve => setTimeout(resolve, 300));
 
-        for (const line of lines) {
-            const textarea = buscarCaixaTexto();
-            if (!textarea) throw new Error("Não há uma conversa aberta");
+        // Tenta clicar no botão de enviar
+        const sendButton = main.querySelector('[data-testid="send"]') || 
+                           main.querySelector('[data-icon="send"]') || 
+                           main.querySelector('button:has(span[data-icon="send"])') ||
+                           document.querySelector('span[data-icon="send"]')?.parentElement;
 
-            console.log(`Enviando: ${line.substring(0, 30)}...`);
-            
-            textarea.focus();
-            document.execCommand('insertText', false, line);
-            
-            // CORREÇÃO: O evento 'input' é o que ativa o botão de enviar em 2026
-            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        if (sendButton) {
+            sendButton.click();
+        } else {
+            // Se o botão falhar, força o Enter
+            const enterEvent = new KeyboardEvent('keydown', {
+                key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true
+            });
+            textarea.dispatchEvent(enterEvent);
+        }
 
-            await new Promise(resolve => setTimeout(resolve, 300));
-
-            const sendButton = main.querySelector('[data-testid="send"]') || 
-                               main.querySelector('[data-icon="send"]') ||
-                               main.querySelector('button:has(span[data-icon="send"])');
-
-            if (sendButton) {
-                sendButton.click();
-            } else {
-                const enter = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true });
-                textarea.dispatchEvent(enter);
-            }
-
+        if (lines.indexOf(line) !== lines.length - 1) {
             await new Promise(resolve => setTimeout(resolve, delay));
         }
     }
-    return repetitions * lines.length;
+
+    return lines.length;
 }
 
 const script = `
